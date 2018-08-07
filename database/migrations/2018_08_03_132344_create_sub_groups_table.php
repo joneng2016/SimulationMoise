@@ -15,8 +15,9 @@ class CreateSubGroupsTable extends Migration
     {
         Schema::create('sub_groups', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('group_super_id');
-            $table->foreign('group_super_id')->references('id')->on('groups')->onDelete('cascade');
+            $table->enum('status_goal',['sub','super']);
+            $table->unsignedInteger('plans_id');
+            $table->foreign('plans_id')->references('id')->on('plans')->onDelete('cascade');
             $table->unsignedInteger('group_sub_id');
             $table->foreign('group_sub_id')->references('id')->on('groups')->onDelete('cascade');
             $table->timestamps();

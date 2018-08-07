@@ -13,9 +13,7 @@ class AlterGoal extends Migration
      */
     public function up()
     {
-        Schema::table('goals',function(Blueprint $table){
-            $table->float('probability')->after('name');
-        });
+
     }
 
     /**

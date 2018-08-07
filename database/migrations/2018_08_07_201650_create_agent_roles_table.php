@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGoalsTable extends Migration
+class CreateAgentRolesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,12 @@ class CreateGoalsTable extends Migration
      */
     public function up()
     {
-        Schema::create('goals', function (Blueprint $table) {
+        Schema::create('agent_roles', function (Blueprint $table) {
             $table->increments('id');
-            $table->float('probability');
+            $table->unsignedInteger('entity_id');
+            $table->foreign('entity_id')->references('id')->on('entities');            
+            $table->unsignedInteger('role_id');
+            $table->foreign('role_id')->references('id')->on('roles');
             $table->timestamps();
         });
     }
@@ -27,6 +30,6 @@ class CreateGoalsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('goals');
+        Schema::dropIfExists('agent_roles');
     }
 }

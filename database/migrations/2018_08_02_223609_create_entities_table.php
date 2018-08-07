@@ -17,6 +17,7 @@ class CreateEntitiesTable extends Migration
             $table->increments('id');
 			$table->string('name')->nullable();
 			$table->enum('type',['object','tool','agent']);
+            $table->unsignedInteger('simulation_id');
             $table->timestamps();
         });
     }

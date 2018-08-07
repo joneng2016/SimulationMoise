@@ -14,13 +14,13 @@ class InsertTestHistory extends Seeder
     public function run()
     {
         //(new VocabularyInsert)->insertSimulation('simulacao01');
-    	//(new VocabularyInsert)->insertObject('objeto01');
-    	//(new VocabularyInsert)->insertAgent('agent01');
-    	//(new VocabularyInsert)->insertAgent('agent02');
-    	//(new VocabularyInsert)->insertAgent('agent03');    	    	
-    	//(new VocabularyInsert)->insertTool('tool01');
-    	//(new VocabularyInsert)->insertTool('tool02');
-    	//(new VocabularyInsert)->insertTool('tool03');    
+    	//(new VocabularyInsert)->insertObject('objeto01','simulacao01');
+    	//(new VocabularyInsert)->insertAgent('agent01','simulacao01');
+    	//(new VocabularyInsert)->insertAgent('agent02','simulacao01');
+    	//(new VocabularyInsert)->insertAgent('agent03','simulacao01');    	    	
+    	//(new VocabularyInsert)->insertTool('tool01','simulacao01');
+    	//(new VocabularyInsert)->insertTool('tool02','simulacao01');
+    	//(new VocabularyInsert)->insertTool('tool03','simulacao01');    
     	//(new VocabularyInsert)->insertMass(70,'agent01');
     	//(new VocabularyInsert)->insertEnergy(100,'agent01');
     	//(new VocabularyInsert)->insertPositionX(0,'agent01');
@@ -40,5 +40,20 @@ class InsertTestHistory extends Seeder
     	//(new VocabularyInsert)->insertPlanChoice("plan_choice_01");    	
     	//(new VocabularyInsert)->insertSuperGoalPlan("goal01","plan_parallel_01");
     	//(new VocabularyInsert)->insertSubGoalPlan("goal02","plan_parallel_01");    	
+    	//(new VocabularyInsert)->insertGoalSequence("plan_sequence_01","goal01-goal02");
+    	//(new VocabularyInsert)->insertOrganization('organization_01','simulacao01');
+    	//(new VocabularyInsert)->insertSchema('schema_01','organization_01');
+    	//(new VocabularyInsert)->insertMission("mission01","schema_01");
+		//(new VocabularyInsert)->insertGoalMission('goal01','mission01');
+		//(new VocabularyInsert)->insertGroup('group01','organization_01');
+		//(new VocabularyInsert)->insertGroup('group02','organization_01');
+		//(new VocabularyInsert)->insertSubGroup('group01','group02');		
+    	//(new VocabularyInsert)->insertRole('role01','group01');
+    	//(new VocabularyInsert)->insertRole('role02','group01');
+    	//(new VocabularyInsert)->insertCompatibility('role01','role02');
+		//(new VocabularyInsert)->insertHeritage('role01','role02');
+    	//(new VocabularyInsert)->insertLinkAuthority('role01','role02');
+    	//(new VocabularyInsert)->insertObligation('role01','mission01');
+   		//(new VocabularyInsert)->insertAgentRole('agent01','role01');
     }
 }
