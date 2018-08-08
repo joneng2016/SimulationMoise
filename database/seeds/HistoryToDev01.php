@@ -76,8 +76,25 @@ class HistoryToDev01 extends Seeder
  		$vi->insertOrganization('organization01','simulation01');
  		
  		$vi->insertSchema('schema01','organization01');
-	*/
  		$vi->insertMission('mission01','schema01');
  		$vi->insertMission('mission02','schema01');
+ 
+		$vi->insertGoalMission('goal00','mission01');
+		$vi->insertGoalMission('goal01','mission01');
+		$vi->insertGoalMission('goal02','mission01');
+		$vi->insertGoalMission('goal06','mission02');
+		$vi->insertGoalMission('goal03','mission02');
+		$vi->insertGoalMission('goal04','mission02');
+		$vi->insertGoalMission('goal05','mission02');
+
+		$vi->insertGroup('group01','organization01');
+		$vi->insertRole('role01','group01');
+		$vi->insertRole('role02','group01');
+		$vi->insertLinkCommunication('role01','role02');
+		$vi->insertObligation('role01','mission01');
+		$vi->insertObligation('role02','mission02');
+		$vi->insertAgentRole('agent01','role01');
+		$vi->insertAgentRole('agent02','role02');
+ */
     }
 }
