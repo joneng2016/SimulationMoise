@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SubGroups extends Model
+class AgentRole extends Model
 {
     //
 }

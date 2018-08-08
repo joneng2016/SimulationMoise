@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGoalsTable extends Migration
+class AlterRelationEntity extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreateGoalsTable extends Migration
      */
     public function up()
     {
-        Schema::create('goals', function (Blueprint $table) {
-            $table->increments('id');
-            $table->float('probability');
-            $table->timestamps();
+        Schema::table('entity_relations',function(Blueprint $table){
+            $table->dropForeign(['condition_id'])->references('id')->on('conditions');
+            $table->dropColumn('condition_id')->references('id')->on('conditions');
         });
     }
 
@@ -27,6 +26,6 @@ class CreateGoalsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('goals');
+        //
     }
 }

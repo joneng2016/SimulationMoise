@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGoalsTable extends Migration
+class AlterEntityAndGoaSequence extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreateGoalsTable extends Migration
      */
     public function up()
     {
-        Schema::create('goals', function (Blueprint $table) {
-            $table->increments('id');
-            $table->float('probability');
-            $table->timestamps();
-        });
+
+
+
     }
 
     /**
@@ -27,6 +25,6 @@ class CreateGoalsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('goals');
+        //
     }
 }
