@@ -7,8 +7,10 @@ use App\Repository\VocabularyQuery;
 class Test
 {
 	public function run(){
-		$vc = new VocabularyQuery;
-		$vc->constructArray();
-		return $vc->relationSimulation();
+		$vq = new VocabularyQuery;
+		
+		$vq->loadBank();
+		$vq->relationVect($vet);
+		return $vet;
 	}
 }

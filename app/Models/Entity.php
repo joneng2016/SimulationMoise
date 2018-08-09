@@ -22,10 +22,11 @@ class Entity extends Model
 		return "There Is Not Role";
 	}
 	public function entityRelation(){
-		return [
-				  $this->hasMany('App\Models\EntityRelation','entity_one_id','id'),
-				  $this->hasMany('App\Models\EntityRelation','entity_two_id','id')
+		return (object)
+		[
+			"first" => $this->hasMany('App\Models\EntityRelation','entity_one_id','id')->get(),
+			"second" => $this->hasMany('App\Models\EntityRelation','entity_two_id','id')->get()
 		];
-
 	}
+	
 }
