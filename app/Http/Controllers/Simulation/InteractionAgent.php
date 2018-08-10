@@ -12,8 +12,8 @@ class InteractionAgent extends Controller
 		$this->agent_run = new \App\Http\Controllers\Simulation\AgentsRun();
 	}
 	public function mainSimulation(){
-		$this->agent_run->getStruct($struct);
-		$this->agent_run->test($test);
+		$this->agent_run->getSchema("schema01");	
+		return $this->agent_run->mainRun();
 	}
 
 }
