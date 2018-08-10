@@ -36,8 +36,17 @@ class Query
 			if($answer) break;
 		}
 	}
-	public function queryAllGoalOfThisMission($mission,$struct,&$answer){
-		dd($mission);
+	public function queryAllGoalOfThisMission($mission,&$answer){
+		$answer = $mission->goal;
+	}
+
+	public function queryAboutThisGoal($goal,$struct){
+		$name_of_goal = $goal->first()->name;
+		foreach($struct->goal as $goal_of_struct){
+			if($goal_of_struct->goal->name == $name_of_goal)
+				return $goal_of_struct->reached;
+			
+		}
 	}
 
 }
