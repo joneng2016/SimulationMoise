@@ -49,7 +49,7 @@ class AgentsRun
 				}
 				$this->doYouDie();
 			}
-			return false;
+			return 'finito';
 		}
 	}	
 
@@ -74,26 +74,21 @@ class AgentsRun
 		$this->query->queryAllGoalOfThisMission($this->mission,$this->goals);
 	}
 	function avaliableConditionThisGoal(){
+
 		$this->goal_analize->set($this->goal,$this->struct);
-		
-		if($this->goal_analize->ifthisIsFirstGoal())
-			return true;
 
-		if($this->goal_analize->verifyIfThisGoalIsCompleted())
-			return false;
-/*
-		
+		if($this->goal_analize->ifthisIsFirstGoal($this->struct)) return false;
+		if($this->goal_analize->verifyIfThisGoalIsCompleted()) return false;
+		if($this->goal_analize->planSubCompleted()) return false;
 
-		if(!$this->goal_analize->planSubCompleted())
-			return false;
 
 		$this->goal_analize->loadSuperPlan($type);
-
+		
 		switch ($type) {
 			case "sequence":
 				return $this->goal_analize->analizeGoalBefore();
 			break;
-
+/*
 			case "parallel":
 				return $this->goal_analize->analizeIfOtherGoalCompleted();
 			break;				
@@ -102,8 +97,9 @@ class AgentsRun
 				if($this->goal_analize->verifyIfOthersPossibilityIsUp()) return $this->goal_analize->iAmChoiced())
 				else return false;
 			break;		
+*/
 		}
-*/		
+		
 		
 	}
 	function avaliableProbability(){}
