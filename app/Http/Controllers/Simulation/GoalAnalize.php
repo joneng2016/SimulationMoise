@@ -46,19 +46,31 @@ class GoalAnalize
 		return true;
 	}
 	public function loadSuperPlan(&$type){
-		$type = $this->query->queryTypeOfThisSuperPlan($this->goal,$this->struct);
+		$type = $this->query->queryTypeOfThisSubPlan($this->goal,$this->struct);
 	}	
 	public function analizeGoalBefore(){
 		$this->query->queryNameOfPlanWhenIAmSub($this->goal,$this->struct,$name);
-		$this->query->querySequenceToThisGoal($this->struct,$name,$goal_sequence);
+		if(!$this->query->querySequenceToThisGoal($this->struct,$name,$goal_sequence)) 
+			return false;
 		$this->breakSequenceInArray($goal_sequence,$goal_array);
-		$this->verifyMyPosition($goal_array,$index);
+		$this->verifyMyPosition($goal_array,$index,$definition);
 		$this->query->querySituationBeforeMe($this->struct,$index,$goal_array,$array_situation);
 
 		return 
-			$this->iDecideThatThisSequenceIs($array_situation);
+			$this->iDecideThatThisSequenceIs($definition,$array_situation,$index);
 	}	
-	public function analizeIfOtherGoalCompleted(){}
+	public function analizeIfOtherGoalCompleted(){
+		if(!$this->query->querySubPlanOfThisGoal($this->goal,$this->struct,$plan))
+			return false;
+
+		if(!$this->query->querySubGoalOfThisPlan($this->goal,$this->struct,$plan,$sub_goal))
+			return false;
+
+		if(!$this->query->queryConditionOfThesesGoal($this->struct,$plan,$sub_goal,$verification))
+			return false;
+
+		return $this->whatIDecide($verification);		
+	}
 	public function verifyIfOthersPossibilityIsUp(){}
 	public function iAmChoiced(){}
 
@@ -66,19 +78,48 @@ class GoalAnalize
 	public function breakSequenceInArray($goal_sequence,&$goal_array){
 		$goal_array = explode("-",$goal_sequence);
 	}
-	public function verifyMyPosition($goal_array,&$index){
+	public function verifyMyPosition($goal_array,&$index,&$definition){
+		$definition = false;
 		foreach($goal_array as $goal){
-			if($goal == $this->goal[0]->name){
+			if($goal == $this->goal[0]->name)
+			{
 				$index = array_keys($goal_array,$goal)[0];
 				return true;
 			}
 		}
+		$definition = true;
+
 	}
-	public function iDecideThatThisSequenceIs($array_situation){
-		foreach($array_situation as $array){
-			if(!$array)
-				return false;
+	public function iDecideThatThisSequenceIs($definition,&$array_situation,$index){
+
+		if(!$definition)
+		{
+			foreach($array_situation as $array){
+				if(!$array)
+				{
+					$array_situation = null;
+					return false;
+				}
+			}
+			{
+				$array_situation = null;				
+				return true;
+			}
 		}
-		return true;
+		else
+		{	
+			$array_situation = null;
+			return false;
+		}
+	}
+	public function verifyIfOthersGoalsCompleted(){
+
+	}
+	public function whatIDecide($verification){
+		foreach($verification as $verify){
+			if($verify->status)
+				return true;
+		}
+		return false;
 	}
 }

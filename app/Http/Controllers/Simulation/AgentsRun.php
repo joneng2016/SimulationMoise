@@ -15,7 +15,6 @@ class AgentsRun
 		$this->vq = new VocabularyQuery;	
 		$this->query = new Query;
 		$this->goal_analize = new GoalAnalize;
-
 		$this->vq->loadBank();
 		$this->vq->relationVect($this->struct);
 
@@ -25,55 +24,74 @@ class AgentsRun
 	}
 	public function mainRun(){
 		$this->loadAgents();
-		while($this->situationOfMissions()){
+		$i = 0;
+		
+		while($this->situationOfMissions($i))
+		{
 			foreach($this->agents as $this->agent)
 			{
-				$this->findMissionThisAgent();
-				foreach($this->missions as $this->mission){
+				$this->findMissionThisAgent();			
+				foreach($this->missions as $this->mission){			
 					$this->verifySchemaThisMission();
 					if($this->avaliableIfThisMissionOkToThisSchema)
 					{
 						$this->getAllGoalThisMission();
 						foreach($this->goals as $this->goal){
 							if($this->avaliableConditionThisGoal())
-							{
-							/*	
-								$this->avaliableProbability();
+							{		
 								$this->executeThisGoal();
+								/*	
+								$this->avaliableProbability();
 								$this->doYouDie();
-							*/
+								*/
 							}
+							$this->cleanThisGoal();
 						}
+						$this->cleanThisGoals();
 						$this->doYouDie();
 					}
+					$this->cleanThisMission();
 				}
+				$this->cleanThisMissions();
 				$this->doYouDie();
+				$this->cleanThisAgent();
+
 			}
-			return 'finito';
+			$i++;
 		}
 	}	
 
-	function loadAgents(){
+	public function loadAgents(){
 		foreach($this->struct->entity as $entity){
 			if($entity->entity->type == 'agent')
 				$this->agents[] = $entity;
 		}
 	}
-	function situationOfMissions(){
+	public function situationOfMissions($i){
+		/*
+		$this->query->queryToArrayAboutIfMissionComplete($this->struct,$situation_mission);
+		return $this->whatIdecideInRelationThis($situation_mission);
+		*/
+		echo $i;
+		if($i > 10){
+			dd($this->struct);
+		}
 		return true;
 	}
+	public function whatIdecideInRelationThis($situation_mission){
 
-	function findMissionThisAgent(){
+	} 
+	public function findMissionThisAgent(){
 		$this->query->queryMissions($this->struct,$this->agent,$this->missions);
 	}
 
-	function verifySchemaThisMission(){
+	public function verifySchemaThisMission(){
 		$this->query->queryThisMissionIsInSchema($this->mission,$this->schema,$this->struct,$this->avaliableIfThisMissionOkToThisSchema);
 	}
-	function getAllGoalThisMission(){
+	public function getAllGoalThisMission(){
 		$this->query->queryAllGoalOfThisMission($this->mission,$this->goals);
 	}
-	function avaliableConditionThisGoal(){
+	public function avaliableConditionThisGoal(){
 
 		$this->goal_analize->set($this->goal,$this->struct);
 
@@ -81,18 +99,17 @@ class AgentsRun
 		if($this->goal_analize->verifyIfThisGoalIsCompleted()) return false;
 		if($this->goal_analize->planSubCompleted()) return false;
 
-
 		$this->goal_analize->loadSuperPlan($type);
-		
+
 		switch ($type) {
 			case "sequence":
 				return $this->goal_analize->analizeGoalBefore();
 			break;
-/*
+
 			case "parallel":
 				return $this->goal_analize->analizeIfOtherGoalCompleted();
 			break;				
-
+/*
 			case "choice":
 				if($this->goal_analize->verifyIfOthersPossibilityIsUp()) return $this->goal_analize->iAmChoiced())
 				else return false;
@@ -102,8 +119,26 @@ class AgentsRun
 		
 		
 	}
-	function avaliableProbability(){}
-	function executeThisGoal(){}
-	function doYouDie(){}
+	public function avaliableProbability(){}
+	public function executeThisGoal(){
+		$this->query->queryChangeStatusThisGoal($this->struct,$this->goal);
+	}
+	public function doYouDie(){}
+
+	public function cleanThisGoals(){
+		$this->goals= null;
+	}
+	public function cleanThisGoal(){
+		$this->goal = null;
+	}
+	public function cleanThisMissions(){
+		$this->missions = null;
+	}
+	public function cleanThisMission(){
+		$this->mission = null;
+	}
+	public function cleanThisAgent(){
+		$this->agent = null;
+	}
 	
 }
