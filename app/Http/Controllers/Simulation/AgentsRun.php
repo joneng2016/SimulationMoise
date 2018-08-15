@@ -15,6 +15,7 @@ class AgentsRun
 		$this->vq = new VocabularyQuery;	
 		$this->query = new Query;
 		$this->goal_analize = new GoalAnalize;
+		$this->goalload = new GoalLoad;		
 		$this->vq->loadBank();
 		$this->vq->relationVect($this->struct);
 
@@ -24,8 +25,8 @@ class AgentsRun
 	}
 	public function mainRun(){
 		$this->loadAgents();
-		$i = 0;
-		
+		$this->goalload->loadGoal($this->schema,$this->struct);
+/*
 		while($this->situationOfMissions($i))
 		{
 			foreach($this->agents as $this->agent)
@@ -40,10 +41,10 @@ class AgentsRun
 							if($this->avaliableConditionThisGoal())
 							{		
 								$this->executeThisGoal();
-								/*	
+									
 								$this->avaliableProbability();
 								$this->doYouDie();
-								*/
+								
 							}
 							$this->cleanThisGoal();
 						}
@@ -57,8 +58,9 @@ class AgentsRun
 				$this->cleanThisAgent();
 
 			}
-			$i++;
+
 		}
+*/
 	}	
 
 	public function loadAgents(){
@@ -72,10 +74,7 @@ class AgentsRun
 		$this->query->queryToArrayAboutIfMissionComplete($this->struct,$situation_mission);
 		return $this->whatIdecideInRelationThis($situation_mission);
 		*/
-		echo $i;
-		if($i > 10){
-			dd($this->struct);
-		}
+	
 		return true;
 	}
 	public function whatIdecideInRelationThis($situation_mission){
@@ -92,13 +91,11 @@ class AgentsRun
 		$this->query->queryAllGoalOfThisMission($this->mission,$this->goals);
 	}
 	public function avaliableConditionThisGoal(){
-
 		$this->goal_analize->set($this->goal,$this->struct);
 
 		if($this->goal_analize->ifthisIsFirstGoal($this->struct)) return false;
 		if($this->goal_analize->verifyIfThisGoalIsCompleted()) return false;
 		if($this->goal_analize->planSubCompleted()) return false;
-
 		$this->goal_analize->loadSuperPlan($type);
 
 		switch ($type) {
@@ -107,7 +104,7 @@ class AgentsRun
 			break;
 
 			case "parallel":
-				return $this->goal_analize->analizeIfOtherGoalCompleted();
+				return true;
 			break;				
 /*
 			case "choice":
@@ -122,6 +119,7 @@ class AgentsRun
 	public function avaliableProbability(){}
 	public function executeThisGoal(){
 		$this->query->queryChangeStatusThisGoal($this->struct,$this->goal);
+		$this->printSituation();
 	}
 	public function doYouDie(){}
 
@@ -140,5 +138,20 @@ class AgentsRun
 	public function cleanThisAgent(){
 		$this->agent = null;
 	}
-	
+	public function printSituation(){
+		echo "%%%%%%%%%%%%% INTERACTION";
+		foreach($this->struct->goal as $goal)
+		{
+			echo
+			"*************************************************************** <br>".
+			"GOAL: ".$goal->goal->name."<br>".
+			"REACHED: <strong>".$goal->reached." </strong> <br>".
+			"STATUS: ".$goal->plan[0]['status']."<br>".
+			"AGENT: ".$this->agent->entity->name."<br>".
+			"*************************************************************** <br>";
+		}
+		echo "%%%%%%%%%%%%% INTERACTION";
+	}
+
+
 }

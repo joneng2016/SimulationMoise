@@ -55,7 +55,7 @@ class GoalAnalize
 		$this->breakSequenceInArray($goal_sequence,$goal_array);
 		$this->verifyMyPosition($goal_array,$index,$definition);
 		$this->query->querySituationBeforeMe($this->struct,$index,$goal_array,$array_situation);
-
+		
 		return 
 			$this->iDecideThatThisSequenceIs($definition,$array_situation,$index);
 	}	

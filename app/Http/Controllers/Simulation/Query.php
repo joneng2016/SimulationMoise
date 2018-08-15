@@ -112,20 +112,22 @@ class Query
 		return null;
 	}
 
-
 	public function queryNameOfPlanWhenIAmSub($goal,$struct,&$name){
 		foreach ($struct->goal as $g) {
 			if($goal[0]->name == $g->goal->name){
 				foreach($g->plan as $plan){
-					$name = $plan['plan']->name;
-					return true;
+					if($plan['status'] == 'sub')
+					{
+						$name = $plan['plan']->name;
+						return true;
+					}
 				}
 			}
 		}
 		return false;
 	}
 
-	public function querySequenceToThisGoal($struct,$name,&$goal_sequence){
+	public function querySequenceToThisGoal($struct,$name,&$goal_sequence){						
 		foreach($struct->plan as $plan){
 			if($plan->plan->name == $name){
 				$goal_sequence = $plan->sequence[0]->sequence_goal;
