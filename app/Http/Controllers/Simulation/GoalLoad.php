@@ -18,10 +18,12 @@ class GoalLoad
 			$this->findMission($mission,$goal,$struct);
 			$this->findAgent($agent,$mission,$struct);
 			$this->findNextGoal($next,$goal,$struct);			
-			$this->thisGoalToInteract($vet_goal,$name,$reached,$super,$next,$mission,$agent,$schema,$probability);
+			$this->thisGoalToInteract($this->vet_goal,$name,$reached,$super,$next,$mission,$agent,$schema,$probability);
 		}
-		dd($vet_goal);
-
+	}
+	public function getStructGoal(&$vet_goal){
+		$vet_goal = $this->vet_goal;
+		return $this->vet_goal;
 	}
 	public function searchMission(&$missions,$schema,$struct){
 		foreach($struct->schema as $schema){
