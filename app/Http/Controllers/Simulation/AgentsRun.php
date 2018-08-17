@@ -45,10 +45,9 @@ class AgentsRun
 							{		
 
 								$this->executeThisGoal();
-							/*									
-								$this->avaliableProbability();
-								$this->doYouDie();
-							*/	
+								GoalPrint::loadGoal($this->struct_goal,$this->goal,$this->agent);
+								GoalPrint::printGoal();								
+								break;
 							}
 							$this->cleanThisGoal();
 						}
@@ -65,7 +64,6 @@ class AgentsRun
 			}
 			$i++;
 		}
-		dd($this->struct_goal);
 
 	}	
 
@@ -81,7 +79,7 @@ class AgentsRun
 		}
 	}
 	public function situationOfMissions($i){
-		if($i < 10) return true;
+		if($i < 100) return true;
 		else return false;
 	}
 	public function whatIdecideInRelationThis($situation_mission){
@@ -131,6 +129,7 @@ class AgentsRun
 
 		$this->verifyIfThereIsSuper($super);
 		$this->isSequenceOrParalell($type);
+
 		switch($type) {
 			case 'parallel':
 				return $this->decideAboutParallel($super);
@@ -144,24 +143,45 @@ class AgentsRun
 	}
 
 	/*************************************************/
-	/*
+
 	public function decideAboutParallel($super)
 	{
-		if($this->goalHasSub())	
+
+		if($this->goal == 'goal03')
+			dd($super);
+
+		if($super)	
 			return $this->ifHasSub();
-		else
+		else 
 			return $this->ifIHaveSuper();
 	}
+
+	
 	public function ifHasSub()
 	{
 		$this->whatIsTypeOfSequenceSub($typeOf);
+	
 		if($typeOf == 'parallel')
 			return $this->ifSubIsParallel();
 
-		if($typeOf == 'sequence'){
+		if($typeOf == 'sequence')
 			return $this->ifSubIsSequence();
-		}
 	}
+
+	public function whatIsTypeOfSequenceSub(&$typeOf){
+		foreach($this->struct_goal as $goal){
+			if($goal->super == $this->goal){
+				if($goal->next != 'not-exist')
+				{
+					$typeOf = 'sequence';
+					return true;
+				}
+			}
+		}
+		$typeOf = 'parallel';
+		return false;
+	}	
+	
 	public function ifSubiSParallel()
 	{
 		if($this->isOneReached())
@@ -169,6 +189,113 @@ class AgentsRun
 		else
 			return false;		
 	}
+
+	public function isOneReached(){
+		foreach($this->struct_goal as $goal){
+			if($goal->super == $this->goal){
+				if($goal->reached)
+					return true;
+			}			
+		}
+		return false;
+	}
+
+	public function ifIHaveSuper()
+	{
+
+		if($this->verifyIfIHaveSuper($goal_super))
+			return $this->analizeSequenceSuper($goal_super);
+		else
+			return true;
+	}
+
+	public function verifyIfIHaveSuper(&$goal_super){
+		foreach($this->struct_goal as $goal){
+			if($goal->name == $this->goal){
+				$goal_super = $goal; 
+				if($this->goal == 'goal04')
+				return $goal->super != 'not-exist';
+			}
+		}
+		return false;
+	}
+
+	public function analizeSequenceSuper($goal_super)
+	{
+		$this->whatIsTypeOfSequenceSuper($typeOf,$goal_super);
+		if($typeOf == 'sequence')
+			return $this->ifSuperIsSequence($goal_super);	
+		if($typeOf == 'parallel')
+			return $this->ifSuperIsParalell($goal_super);		
+	}
+	public function whatIsTypeOfSequenceSuper(&$typeOf,$goal_super){
+		if($goal_super->super == 'not-exist'){
+			$typeOf = 'sequence';
+			return true;
+		}
+		else{
+			$goal_super_super = $goal_super->super;
+			foreach($this->struct_goal as $goal){
+				if($goal->super = $goal_super_super){
+					if($goal->next != 'not-exist')
+					{
+						$typeOf = 'sequence';
+						return true;
+					}
+				}
+			}
+			$typeOf = 'parallel';
+			return false;
+		}
+	}
+
+	public function ifSuperIsSequence($goal_super)
+	{
+		if($this->superGoalIsFirst($goal_super))
+			return $this->aboutGoalsSideMe($goal_super);
+		else{
+			if($this->goalBeforeSuperIsReached($goal_super))
+				return $this->aboutGoalsSideMe($goal_super);
+			else
+				return false;
+		}		
+	}
+
+	public function superGoalIsFirst($goal_super){
+		foreach($this->struct_goal as $goal){
+			if($goal->next == $goal_super){
+				return false;
+			}
+		}
+		return true;
+	}
+	public function aboutGoalsSideMe($goal_super)
+	{
+		$this->getAllGoalSideMe($goal_super,$goalreached);
+		if($this->goalReached($goalreached))
+			return false;
+		else
+			return true;
+	}
+	public function getAllGoalSideMe($goal_super,&$goalreached){
+		foreach($this->struct_goal as $goal){
+			if($goal->name != $this->goal){
+				if($goal->super == $goal_super->super)
+						$goalreached[] = $goal;
+			}
+		}
+	}
+	public function goalReached(&$goalreached){
+		foreach($goalreached as $goal){
+			if($goal->reached){
+				$goalreached = null;			
+				return true;	
+			}
+		}
+		$goalreached = null;
+		return false;
+	}	
+
 	public function ifSubIsSequence()
 	{
 		if($this->allGoalReached())
@@ -176,60 +303,54 @@ class AgentsRun
 		else 
 			return false;		
 	}
-	public function ifIHaveSuper()
-	{
-		if($this->verifyIfIHaveSuper())
-			return $this->analizeSequenceSuper();
-		else
-			return true;
+	public function allGoalReached(){
+		$count_exist = 0;
+		$count_reached = 0;		
+		foreach($this->struct_goal as $goal){
+			if($goal->super == $this->goal){
+				$count_exist++;
+				if($goal->reached) $count_reached;
+			}
+		}
+		if($count_reached == $count_exist) return true;
+		else return false;
 	}
-	public function analizeSequenceSuper()
+
+	public function ifSuperIsParalell($goal_super)
 	{
-		$this->whatIsTypeOfSequenceSuper($typeOf);
-		if($typeOf == 'sequence')
-			return $this->ifSuperIsSequence();	
-		if($typeOf == 'parallel')
-			return $this->ifSuperIsParalell();		
-	}
-	public function ifSuperIsSequence()
-	{
-		if($this->superGoalIsFirst())
-			return $this->aboutGoalsSideMe();
-		else{
-			if($this->goalBeforeSuperIsReached())
-				return $this->aboutGoalsSideMe();
-			else
-				return false;
-		}		
-	}
-	public function ifSuperIsParalell()
-	{
-		if($this->someWhereIsReached())
+		if($this->someWhereIsReached($goal_super))
 			return false;
 		else
-			return $this->aboutGoalsSideMe();		
+			return $this->aboutGoalsSideMe($goal_super);		
 	}
-	public function aboutGoalsSideMe()
-	{
-		$this->getAllGoalSideMe();
-		if($this->goalReached())
-			return false;
-		else
-			return true;
+	public function someWhereIsReached($goal_super){
+		foreach($this->struct_goal as $goal){
+			if($goal->name = $goal_super)
+			{	
+				$goal_super_super = $goal->super;
+				break;
+			}
+		}
+		foreach($this->struct_goal as $goal){
+			if($goal->super == $goal_super_super && $goal->name != $this->goal){
+				if($goal->require)
+					return true;
+			}
+		}
+		return false;
 	}
 
 
+	public function goalBeforeSuperIsReached($goal_super){
+		foreach($struct_goal as $goal){
+			if($goal->next == $goal_super){
+				return $goal->reached;
+			}
+		}
+		return false;
+	}
 
-	public function goalHasSub(){}
-	public function whatIsTypeOfSequenceSub($typeOf){}
-	public function isOneReached(){}
-	public function allGoalReached(){}
-	public function verifyIfIHaveSuper(){}
-	public function whatIsTypeOfSequenceSuper(){}
-	public function superGoalIsFirst(){}
-	public function goalBeforeSuperIsReached(){}
-	public function goalReached(){}
-	*/
+
 	/*************************************************/
 	public function isThisReached(){
 		foreach($this->struct_goal as $goal){
@@ -240,6 +361,8 @@ class AgentsRun
 		}
 	}
 	public function decideAboutSequence($super){
+		if($this->goal == 'goal03')
+			dd("*");
 		if($super)
 		{	
 			if($this->checkIfAllSubReached())
