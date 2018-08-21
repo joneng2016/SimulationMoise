@@ -39,25 +39,22 @@ class AgentsRun
 						foreach($this->goals as $this->goal){
 							if((new AvaliableCondition)->condition($this->goal,$this->struct_goal))
 							{		
-								$this->executeThisGoal();
-								GoalPrint::loadGoal($this->struct_goal,$this->goal,$this->agent);
-								GoalPrint::printGoal();								
+								if(!$this->executeThisGoal())											
+									return $this->whatReturn("DIE",false);
 								break;
 							}
 							$this->cleanThisGoal();
 						}
 						$this->cleanThisGoals();
-						$this->doYouDie();
 					}
 					$this->cleanThisMission();
 				}
 				$this->cleanThisMissions();
-				$this->doYouDie();
 				$this->cleanThisAgent();
 				
 			}
 		}
-
+		return $this->whatReturn("COMPLETED",true);
 	}	
 
 	public function loadAgents(){
@@ -121,18 +118,37 @@ class AgentsRun
 		}
 	}
 	
-
+	public function whatReturn($msg,$status){
+		return (object) 
+		[
+			"situation" => $msg,
+			"struct_goal" => $this->struct_goal,
+			"goal" => $this->goal,	
+			"status" => $status
+		];		
+	}
 	public function executeThisGoal(){
+
 		foreach($this->struct_goal as $goal)
 		{
 			if($goal->name == $this->goal){
-				$goal->reached = true;
+				if($goal->probability == 1.0)
+				{	
+					$goal->reached = true;	
+					return true;
+				}
+				else{
+					if(Probability::calc((float) $goal->probability))
+					{ 
+						$goal->reached = true;
+						return true;
+					}
+					else
+						return false;
+				}
 			}
 		}	
 	}
-	public function avaliableProbability(){}
-
-	public function doYouDie(){}
 
 	public function cleanThisGoals(){
 		$this->goals= null;

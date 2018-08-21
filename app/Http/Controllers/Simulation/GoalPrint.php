@@ -26,7 +26,13 @@ class GoalPrint
 		foreach(self::$goal as $goal){
 			if($goal->name == self::$name)
 			{
-				echo "COUNT>".self::$count." | GOAL > ".$goal->name." | MISSION > ".$goal->mission." ::: Status > ".$goal->reached." ::: Agent >".self::$agent." \n";
+				if($goal->reached)
+					$status = 'Completed';
+				else
+					$status = 'Not-Completed';
+
+
+				echo "COUNT > ".self::$count." | GOAL > ".$goal->name." | MISSION > ".$goal->mission." ::: Status > ".$status." ::: Agent >".self::$agent." <br>";
 				self::$count++;
 			}
 		}
@@ -35,6 +41,9 @@ class GoalPrint
 		echo "¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨\n";
 		echo "FINISH  ***************************************\n";		
 		echo "***********************************************\n";		
+	}
+	public static function printDieProbability($probability){
+		echo "Probability - of Die > ".$probability."\n";
 	}
 
 }
