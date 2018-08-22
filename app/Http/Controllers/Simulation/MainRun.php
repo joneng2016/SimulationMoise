@@ -9,6 +9,6 @@ use App\Repository\VocabularyQuery;
 class MainRun
 {
 	public static function run(){
-		RunSimulation::caseone();
+		RunSimulation::casegenerateindb('testeagosto22155839',2000);
 	}
 }

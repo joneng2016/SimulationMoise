@@ -60,12 +60,25 @@ class RunSimulation
 	}
 	public static function caseone()
 	{
-		(new \App\Http\Controllers\Simulation\GoalPrint())::startPrint();
+		\App\Http\Controllers\Simulation\GoalPrint::startPrint();
 		self::interaction(1000,$analizes);
 		$probability_bad = self::analizeSituation($analizes);
 		(new \App\Http\Controllers\Simulation\GoalPrint())::printDieProbability($probability_bad);
-      	(new \App\Http\Controllers\Simulation\GoalPrint())::finishSimulation();
+      	\App\Http\Controllers\Simulation\GoalPrint::finishSimulation();
 	}
-
-	
+	public static function casegenerateindb($name_simulation,$number_interaction){
+		\App\Http\Controllers\Simulation\GoalPrint::startPrint();
+		self::interaction($number_interaction,$analizes);
+		return (new Statistic)->workAboutData($analizes,$name_simulation);
+		\App\Http\Controllers\Simulation\GoalPrint::finishSimulation();
+	}
+	public static function casemoungraf(){
+		$probability = 0.125;
+		while($probability < 1.01){
+			$name = 'goal03 with_probability: '.$probability;
+			$this->casegenerateindb($name,1000);
+			$this->tractDataStatisticMove($name);
+			$probability+=0.05;
+		}
+	}
 }
