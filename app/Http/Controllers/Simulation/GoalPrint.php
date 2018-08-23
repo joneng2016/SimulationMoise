@@ -45,5 +45,10 @@ class GoalPrint
 	public static function printDieProbability($probability){
 		echo "Probability - of Die > ".$probability."\n";
 	}
-
+	public static function runCaseGeneration(){
+		echo "finish one case\n";
+	}
+	public static function finishStatisticTract(){
+		echo "Finish Statistic Tract\n";
+	}
 }
