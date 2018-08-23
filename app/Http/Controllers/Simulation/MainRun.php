@@ -23,6 +23,6 @@ class MainRun
 	public static function withcasegoal02()
 	{
 		for($i = 1; $i < 6; $i++)
-			RunSimulation::casemoungraf("goal_simulation_test_goal0.".$i."_2308SECOND",["goal0".$i],0.1,1.0,0.5);		
+			RunSimulation::casemoungraf("goal_simulation_test_goal0".$i."_2308-3",["goal0".$i],0.05,1.0,0.05);		
 	}
 }
