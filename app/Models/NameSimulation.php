@@ -19,6 +19,9 @@ class NameSimulation extends Model
     	return $this->where('name',$name)->first()->id;
     }
     public function dataSimulation(){
-    	return $this->hasMany('\App\Models\DataSimulation')->get();
+    	return $this->hasMany('\App\Models\DataSimulation','name_id','id')->get();
     }
+	 public function verifyIfExist($name){
+		return !($this->where('name',$name)->get()->isEmpty());
+	 }
 }

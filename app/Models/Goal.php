@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Goal extends Model
 {
+	protected $fillable = ['probability'];
 	public function plan(){
 		$goal_plans = $this->hasMany("App\Models\GoalPlan")->get();
 		foreach ($goal_plans as $goalplan) 
@@ -17,5 +18,16 @@ class Goal extends Model
 			];
 		}
 		return $plan;
+	}
+	public function updateGoal($name,$probability){
+		$this->prepareArg($probability,$return);
+		$this->where('name',$name)->first()->update($return);
+	}
+	public function prepareArg($probability,&$toreturn){
+		$toreturn = 
+		[
+			"probability" => $probability,
+			"updated_at" => new \DateTime
+		];
 	}
 }
