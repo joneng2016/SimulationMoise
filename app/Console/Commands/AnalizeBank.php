@@ -39,18 +39,16 @@ class AnalizeBank extends Command
     public function handle()
     {
         $numbergoal = "04";
-        $this->s_s_repository->loadToRelationGoalProbability("goal_simulation_test_goal01_2308-3 - 0.05",$numbergoal);
+        $this->s_s_repository->loadToRelationGoalProbability("goal_simulation_test_goal00_2408-4 - 0.01",$numbergoal);
         $this->s_s_repository->relationGoalProbability();
         $this->s_s_repository->getRelation($relation);
         $this->writeInFile($relation,$numbergoal);
     }
     public function writeInFile($relation,$numbergoal){
-        $where = __DIR__."/../../../public/solutionsimulation";
-        $name_file = "goal".$numbergoal;
+        $where = __DIR__."/../../../public/solutionsimulation/simulation2408";
+        $name_file = "goal".$numbergoal.".txt";
         $where_file = $where."/".$name_file;
         $file = fopen($where_file,"w");
-        $begin_file = "probability_goal_success  probability_activity_bad \n";
-        fwrite($file, $begin_file);
         foreach($relation as $rel){
             $sentence = $rel["goal_probability"]."  ".$rel["activity_probability"]."\n";
             fwrite($file, $sentence);
